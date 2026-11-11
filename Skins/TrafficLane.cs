@@ -22,6 +22,19 @@ public sealed class TrafficLane : TankLayer, ITankLife
     /// <summary>The percentage used, NaN while there is no data.</summary>
     public double Value { get => (double)GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
 
+    public static readonly DependencyProperty TimeLeftProperty = DependencyProperty.Register(
+        nameof(TimeLeft), typeof(double), typeof(TrafficLane),
+        new FrameworkPropertyMetadata(double.NaN, (d, _) => ((TrafficLane)d).DrawLight()));
+
+    /// <summary>How much of the limit's window is still to run, 0 to 1, NaN when unknown.</summary>
+    public double TimeLeft { get => (double)GetValue(TimeLeftProperty); set => SetValue(TimeLeftProperty, value); }
+
+    /// <summary>
+    /// In the last tenth of the window the waiting light turns amber: the reset, and with it the green, is near.
+    /// It is the same moment the time on the sign turns red.
+    /// </summary>
+    private bool ResetNear => TimeLeft <= 0.1 && !double.IsNaN(Value);
+
     /// <summary>Which of the lanes this is. Each lane has its own run of cars, so a car keeps its look from one day to the next.</summary>
     public int Seed { get; set; }
 
@@ -304,8 +317,9 @@ public sealed class TrafficLane : TankLayer, ITankLife
         var housing = new LinearGradientBrush(CarArt.Rgb(0x3A4148), CarArt.Rgb(0x15191C), 0);
         dc.DrawRoundedRectangle(housing, new Pen(new SolidColorBrush(CarArt.Rgb(0x0A0C0E)), 0.7), box, 2.4, 2.4);
 
-        Lamp(dc, 7.5, CarArt.Rgb(0xFF2B1E), state is Light.Red or Light.ToGreen);
-        Lamp(dc, 16, CarArt.Rgb(0xFFB21C), state is Light.ToGreen or Light.ToRed);
+        bool waitingAmber = state == Light.Red && ResetNear;
+        Lamp(dc, 7.5, CarArt.Rgb(0xFF2B1E), (state == Light.Red && !waitingAmber) || state == Light.ToGreen);
+        Lamp(dc, 16, CarArt.Rgb(0xFFB21C), waitingAmber || state is Light.ToGreen or Light.ToRed);
         Lamp(dc, 24.5, CarArt.Rgb(0x3BF27A), state == Light.Green);
     }
 

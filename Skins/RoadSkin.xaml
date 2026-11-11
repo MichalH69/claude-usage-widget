@@ -116,7 +116,7 @@
                     <s:RoadSign x:Name="SessionSign" Canvas.Left="44" Canvas.Top="1" Label="SESSION · 5 H"
                                 PercentText="{Binding PercentText}" Level="{Binding Level}" Countdown="{Binding Countdown}"
                                 ResetText="{Binding ResetText}" ResetClock="{Binding ResetClock}" TimeLeft="{Binding TimeLeft}" />
-                    <s:TrafficLane x:Name="SessionLane" Width="302" Height="55" Seed="1" Fleet="Mix" Value="{Binding Percent}" />
+                    <s:TrafficLane x:Name="SessionLane" Width="302" Height="55" Seed="1" Fleet="Mix" Value="{Binding Percent}" TimeLeft="{Binding TimeLeft}" />
                 </Canvas>
 
                 <Canvas Canvas.Top="115" DataContext="{Binding Weekly}">
@@ -126,7 +126,7 @@
                     <s:RoadSign x:Name="WeeklySign" Canvas.Left="44" Canvas.Top="1" Label="TÝDEN"
                                 PercentText="{Binding PercentText}" Level="{Binding Level}" Countdown="{Binding Countdown}"
                                 ResetText="{Binding ResetText}" ResetClock="{Binding ResetClock}" TimeLeft="{Binding TimeLeft}" />
-                    <s:TrafficLane x:Name="WeeklyLane" Width="302" Height="55" Seed="2" Fleet="Campers" Value="{Binding Percent}" />
+                    <s:TrafficLane x:Name="WeeklyLane" Width="302" Height="55" Seed="2" Fleet="Campers" Value="{Binding Percent}" TimeLeft="{Binding TimeLeft}" />
                 </Canvas>
 
                 <Canvas Canvas.Top="170" DataContext="{Binding Fable}">
@@ -136,7 +136,7 @@
                     <s:RoadSign x:Name="FableSign" Canvas.Left="44" Canvas.Top="1" Label="FABLE"
                                 PercentText="{Binding PercentText}" Level="{Binding Level}" Countdown="{Binding Countdown}"
                                 ResetText="{Binding ResetText}" ResetClock="{Binding ResetClock}" TimeLeft="{Binding TimeLeft}" />
-                    <s:TrafficLane x:Name="FableLane" Width="302" Height="55" Seed="3" Fleet="Racers" Value="{Binding Percent}" />
+                    <s:TrafficLane x:Name="FableLane" Width="302" Height="55" Seed="3" Fleet="Racers" Value="{Binding Percent}" TimeLeft="{Binding TimeLeft}" />
                 </Canvas>
             </Canvas>
 
