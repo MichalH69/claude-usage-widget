@@ -1,0 +1,261 @@
+<Window x:Class="ClaudeUsageWidget.WidgetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ClaudeUsageWidget"
+        Title="Využití Claude"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ShowInTaskbar="False" ShowActivated="False" ResizeMode="NoResize"
+        WindowStartupLocation="Manual"
+        FontFamily="Segoe UI">
+    <Window.Resources>
+        <!-- The cog and the button beside it: small dark glass buttons, like the ones on a Vista gadget's edge.
+             The sign on the button is its Tag. -->
+        <Style x:Key="GearButton" TargetType="Button">
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Height" Value="18" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse Stroke="#A0FFFFFF" StrokeThickness="0.8">
+                                <Ellipse.Fill>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#F04A5868" Offset="0" />
+                                        <GradientStop Color="#F01A222C" Offset="0.5" />
+                                        <GradientStop Color="#F0080C12" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Path x:Name="Cog" Data="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" Fill="#E6F1FB" />
+                            <!-- The gloss sits over the cog, so it reads as lying under glass. -->
+                            <Ellipse Margin="2.5,1.2,2.5,9" IsHitTestVisible="False">
+                                <Ellipse.Fill>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#90FFFFFF" Offset="0" />
+                                        <GradientStop Color="#10FFFFFF" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Cog" Property="Fill" Value="#8FD8FF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- One half of the skin switch. The chosen half lights up as a blue gel pill. -->
+        <Style x:Key="Segment" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="#C9D8E6" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid>
+                            <Border x:Name="Gel" CornerRadius="10" Background="Transparent" BorderThickness="1" BorderBrush="Transparent" />
+                            <Border x:Name="Shine" CornerRadius="9,9,6,6" Margin="2,1.5,2,11" Visibility="Collapsed">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#B4FFFFFF" Offset="0" />
+                                        <GradientStop Color="#20FFFFFF" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <ContentPresenter Margin="13,3,13,4" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Gel" Property="Background" Value="#24FFFFFF" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Gel" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#6CC4F4" Offset="0" />
+                                            <GradientStop Color="#1E86D6" Offset="0.5" />
+                                            <GradientStop Color="#0B62B4" Offset="0.52" />
+                                            <GradientStop Color="#2FA4E8" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Gel" Property="BorderBrush" Value="#0A4A8C" />
+                                <Setter TargetName="Shine" Property="Visibility" Value="Visible" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- The see-through slider under the switch: a dark groove, the filled part lit blue, a glass knob. -->
+        <Style x:Key="GlassSlider" TargetType="Slider">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="IsMoveToPointEnabled" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid Height="16" Background="Transparent">
+                            <Border Height="5" CornerRadius="2.5" BorderThickness="1" BorderBrush="#70000000" VerticalAlignment="Center">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#FF05080C" Offset="0" />
+                                        <GradientStop Color="#FF2A3644" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Track x:Name="PART_Track">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Focusable="False" IsTabStop="False" Command="Slider.DecreaseLarge">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Height="3" Margin="1,0,-6,0" CornerRadius="1.5" VerticalAlignment="Center">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                            <GradientStop Color="#6CC4F4" Offset="0" />
+                                                            <GradientStop Color="#1E86D6" Offset="1" />
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Focusable="False" IsTabStop="False" Command="Slider.IncreaseLarge">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="Transparent" />
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Width="13" Height="13">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Grid>
+                                                    <Ellipse Stroke="#0A4A8C" StrokeThickness="1">
+                                                        <Ellipse.Fill>
+                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                                <GradientStop Color="#9ED8F8" Offset="0" />
+                                                                <GradientStop Color="#2A92DE" Offset="0.5" />
+                                                                <GradientStop Color="#0B62B4" Offset="0.52" />
+                                                                <GradientStop Color="#3FB0EE" Offset="1" />
+                                                            </LinearGradientBrush>
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <Ellipse Margin="2.5,1.3,2.5,6.5">
+                                                        <Ellipse.Fill>
+                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                                <GradientStop Color="#C0FFFFFF" Offset="0" />
+                                                                <GradientStop Color="#20FFFFFF" Offset="1" />
+                                                            </LinearGradientBrush>
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- The window is a frame as large as the widget's large version, and the widget sits in one corner of it.
+         The rest of the frame is empty and lets the mouse through. -->
+    <Grid x:Name="Root" ToolTip="{Binding Problem}" ToolTipService.InitialShowDelay="700">
+        <Grid.ContextMenu>
+            <ContextMenu Opened="OnMenuOpened">
+                <MenuItem x:Name="MenuStatus" IsEnabled="False" />
+                <MenuItem x:Name="MenuUpdate" Visibility="Collapsed" FontWeight="SemiBold" Click="OnUpdateClick" />
+                <MenuItem x:Name="MenuRefresh" Header="Obnovit teď" Click="OnRefreshClick" />
+                <MenuItem x:Name="MenuTray" Header="Minimalizovat" Click="OnMenuTrayClick" />
+                <Separator />
+                <MenuItem x:Name="MenuGauges" Header="Rychloměr" IsCheckable="True" Click="OnMenuGaugesClick" />
+                <MenuItem x:Name="MenuAquarium" Header="Akvárko" IsCheckable="True" Click="OnMenuAquariumClick" />
+                <MenuItem x:Name="MenuRoad" Header="Silnice" IsCheckable="True" Click="OnMenuRoadClick" />
+                <Separator />
+                <MenuItem x:Name="MenuLarge" Header="Velká verze" IsCheckable="True" Click="OnLargeClick" />
+                <MenuItem x:Name="MenuTopmost" Header="Vždy navrchu" IsCheckable="True" Click="OnTopmostClick" />
+                <MenuItem x:Name="MenuAutostart" Header="Spouštět s Windows" IsCheckable="True" Click="OnAutostartClick" />
+                <Separator />
+                <MenuItem x:Name="MenuVersion" IsEnabled="False" />
+                <MenuItem Header="Zavřít" Click="OnCloseClick" />
+            </ContextMenu>
+        </Grid.ContextMenu>
+
+        <!-- The stage lands on whole pixels wherever in the frame it stands. What it holds is laid out as before. -->
+        <!-- Round the stage the frame leaves a little room, so the widget can grow a touch under the pointer. -->
+        <Grid x:Name="Stage" HorizontalAlignment="Left" VerticalAlignment="Top" UseLayoutRounding="True"
+              Margin="{x:Static local:WidgetWindow.HoverRoom}" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <ScaleTransform x:Name="HoverZoom" />
+            </Grid.RenderTransform>
+            <!-- Fully transparent pixels of a layered window let the mouse through. While the pointer is over the widget,
+                 this nearly invisible sheet fills the gaps between the dials, so the pointer can reach the cog. -->
+            <Rectangle x:Name="HoverSurface" Fill="#01000000" Visibility="Collapsed" />
+
+            <ContentControl x:Name="SkinHost" Focusable="False" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            UseLayoutRounding="False" />
+
+            <Canvas UseLayoutRounding="False">
+                <Button x:Name="Gear" Style="{StaticResource GearButton}" Opacity="0" IsHitTestVisible="False"
+                        Tag="{x:Static local:GearIcon.Geometry}" Click="OnGearClick" />
+                <Button x:Name="TrayButton" Style="{StaticResource GearButton}" Opacity="0" IsHitTestVisible="False"
+                        Tag="{x:Static local:GearIcon.Minimize}" ToolTip="Minimalizovat do oznamovací oblasti"
+                        Click="OnTrayButtonClick" />
+            </Canvas>
+        </Grid>
+
+        <!-- The row opens beside the cog, along the top edge, where it covers a title and not a reading. -->
+        <Popup x:Name="SkinPicker" PlacementTarget="{Binding ElementName=Gear}" Placement="Right"
+               HorizontalOffset="-3" VerticalOffset="-11" AllowsTransparency="True" StaysOpen="False"
+               PopupAnimation="Fade" Closed="OnPickerClosed">
+            <Border x:Name="PickerPill" Margin="7" Padding="3" CornerRadius="13" BorderThickness="1" BorderBrush="#96FFFFFF"
+                    MouseLeftButtonDown="OnPickerMouseDown">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#F23C4A5A" Offset="0" />
+                        <GradientStop Color="#F2161E28" Offset="0.48" />
+                        <GradientStop Color="#F2090D13" Offset="0.5" />
+                        <GradientStop Color="#F21A2430" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="7" ShadowDepth="1.5" Direction="270" Opacity="0.55" />
+                </Border.Effect>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="PickGauges" Content="Rychloměr" Style="{StaticResource Segment}"
+                                     GroupName="Skin" Click="OnPickGauges" />
+                        <RadioButton x:Name="PickAquarium" Content="Akvárko" Style="{StaticResource Segment}"
+                                     GroupName="Skin" Click="OnPickAquarium" />
+                        <RadioButton x:Name="PickRoad" Content="Silnice" Style="{StaticResource Segment}"
+                                     GroupName="Skin" Click="OnPickRoad" />
+                    </StackPanel>
+                    <DockPanel Margin="10,4,10,3">
+                        <TextBlock Text="Průhlednost" FontSize="11" Foreground="#C9D8E6" VerticalAlignment="Center" />
+                        <TextBlock x:Name="SeeThroughText" DockPanel.Dock="Right" Width="30" TextAlignment="Right"
+                                   FontSize="11" Foreground="#C9D8E6" VerticalAlignment="Center" />
+                        <Slider x:Name="SeeThrough" Style="{StaticResource GlassSlider}" Margin="8,0,2,0" VerticalAlignment="Center"
+                                Minimum="0" Maximum="{x:Static local:WidgetWindow.MostSeeThrough}" SmallChange="0.05" LargeChange="0.1"
+                                ValueChanged="OnSeeThroughChanged" />
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+        </Popup>
+    </Grid>
+</Window>

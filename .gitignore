@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# Previews rendered on the author's own desktop wallpaper.
+mockups/

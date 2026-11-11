@@ -1,0 +1,27 @@
+<UserControl x:Class="ClaudeUsageWidget.Skins.GaugesSkin"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:s="clr-namespace:ClaudeUsageWidget.Skins">
+    <!-- The code-behind sets the size and places the dials, once for the large version and once for the small one. -->
+    <Canvas>
+        <Canvas.Style>
+            <Style TargetType="Canvas">
+                <Style.Triggers>
+                    <!-- Old values stay readable but step back. -->
+                    <DataTrigger Binding="{Binding IsStale}" Value="True">
+                        <Setter Property="Opacity" Value="0.55" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Canvas.Style>
+        <s:GaugeDial x:Name="SessionDial" Detailed="True" Label="SESSION · 5 H" Accent="#8FDFFF"
+                     Value="{Binding Session.Percent}" Estimate="{Binding Session.IsEstimate}"
+                     ResetText="{Binding Session.Countdown}" ResetClock="{Binding Session.ResetClock}" />
+        <s:GaugeDial x:Name="WeeklyDial" Label="TÝDEN" Accent="#B4EE7E"
+                     Value="{Binding Weekly.Percent}" Estimate="{Binding Weekly.IsEstimate}"
+                     ResetText="{Binding Weekly.Countdown}" ResetClock="{Binding Weekly.ResetClock}" />
+        <s:GaugeDial x:Name="FableDial" Label="FABLE" Accent="#D2B0FF"
+                     Value="{Binding Fable.Percent}" Estimate="{Binding Fable.IsEstimate}"
+                     ResetText="{Binding Fable.Countdown}" ResetClock="{Binding Fable.ResetClock}" />
+    </Canvas>
+</UserControl>

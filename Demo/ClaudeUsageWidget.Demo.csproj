@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The test build: the same widget with made-up values set by hand. It is built with DEMO, under which the code
+    that reads the login, asks the server or starts Claude Code returns at once, so it can run as often as needed
+    without a single request reaching the server.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>ClaudeUsageWidget.Demo</AssemblyName>
+    <RootNamespace>ClaudeUsageWidget</RootNamespace>
+    <StartupObject>ClaudeUsageWidget.Demo.DemoProgram</StartupObject>
+    <SatelliteResourceLanguages>cs</SatelliteResourceLanguages>
+    <DefineConstants>$(DefineConstants);DEMO</DefineConstants>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <NoWarn>$(NoWarn);CS0162</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\**\*.cs" Exclude="..\Program.cs;..\bin\**;..\obj\**;..\Demo\bin\**;..\Demo\obj\**"
+             Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="..\**\*.xaml" Exclude="..\bin\**;..\obj\**;..\Demo\**"
+          Link="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+</Project>

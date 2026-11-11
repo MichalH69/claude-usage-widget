@@ -1,0 +1,334 @@
+<UserControl x:Class="ClaudeUsageWidget.Skins.AquariumSkin"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:s="clr-namespace:ClaudeUsageWidget.Skins"
+             Width="312" Height="266" FontFamily="Segoe UI">
+    <UserControl.Resources>
+        <DropShadowEffect x:Key="WaterText" Color="#011C38" BlurRadius="4" ShadowDepth="0.8" Direction="270" Opacity="1" />
+
+        <RadialGradientBrush x:Key="Bubble" GradientOrigin="0.32,0.28">
+            <GradientStop Color="#D8FFFFFF" Offset="0" />
+            <GradientStop Color="#14FFFFFF" Offset="0.55" />
+            <GradientStop Color="#78FFFFFF" Offset="1" />
+        </RadialGradientBrush>
+
+        <!-- Glossy black plastic of the hood and the base. -->
+        <LinearGradientBrush x:Key="Plastic" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#5A636B" Offset="0" />
+            <GradientStop Color="#272C31" Offset="0.46" />
+            <GradientStop Color="#090B0D" Offset="0.5" />
+            <GradientStop Color="#1A1E22" Offset="1" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="Leaf" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#B6F25A" Offset="0" />
+            <GradientStop Color="#3FB23A" Offset="0.55" />
+            <GradientStop Color="#136B2C" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="LeafDeep" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#4FC98A" Offset="0" />
+            <GradientStop Color="#0E6E5C" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="Ray" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#40FFFFFF" Offset="0" />
+            <GradientStop Color="#00FFFFFF" Offset="1" />
+        </LinearGradientBrush>
+
+        <!-- A strip of dark glass under each line of text, so it reads on the bright water near the surface too. -->
+        <LinearGradientBrush x:Key="CaptionGlass" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#00062848" Offset="0" />
+            <GradientStop Color="#70062848" Offset="0.07" />
+            <GradientStop Color="#58062848" Offset="0.5" />
+            <GradientStop Color="#70062848" Offset="0.93" />
+            <GradientStop Color="#00062848" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="CaptionShine" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#00FFFFFF" Offset="0" />
+            <GradientStop Color="#38FFFFFF" Offset="0.2" />
+            <GradientStop Color="#38FFFFFF" Offset="0.8" />
+            <GradientStop Color="#00FFFFFF" Offset="1" />
+        </LinearGradientBrush>
+        <Style x:Key="Caption" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CaptionGlass}" />
+            <Setter Property="BorderBrush" Value="{StaticResource CaptionShine}" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Margin" Value="-8,0,-8,0" />
+            <Setter Property="Padding" Value="8,0,8,0" />
+        </Style>
+
+        <Style x:Key="LimitName" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,2,0,0" />
+            <Setter Property="Effect" Value="{StaticResource WaterText}" />
+        </Style>
+        <Style x:Key="LimitReset" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Margin" Value="7,3,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Effect" Value="{StaticResource WaterText}" />
+        </Style>
+        <Style x:Key="LimitPercent" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Effect" Value="{StaticResource WaterText}" />
+        </Style>
+
+        <!-- The number sits on a gel pill once the limit runs short. The fish keep their own colours. -->
+        <LinearGradientBrush x:Key="WarnGel" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#FFE08A" Offset="0" />
+            <GradientStop Color="#FFAE2A" Offset="0.5" />
+            <GradientStop Color="#F29100" Offset="0.5" />
+            <GradientStop Color="#FFBC42" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="CriticalGel" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#FFA596" Offset="0" />
+            <GradientStop Color="#F24B34" Offset="0.5" />
+            <GradientStop Color="#DB2A16" Offset="0.5" />
+            <GradientStop Color="#F75C45" Offset="1" />
+        </LinearGradientBrush>
+        <Style x:Key="PercentBadge" TargetType="Border">
+            <Setter Property="DockPanel.Dock" Value="Right" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="7,0,7,0" />
+            <Setter Property="Margin" Value="0,0,-7,0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Level}" Value="warn">
+                    <Setter Property="Background" Value="{StaticResource WarnGel}" />
+                    <Setter Property="BorderBrush" Value="#D08A4A00" />
+                    <Setter Property="Margin" Value="0" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Level}" Value="critical">
+                    <Setter Property="Background" Value="{StaticResource CriticalGel}" />
+                    <Setter Property="BorderBrush" Value="#D07A1206" />
+                    <Setter Property="Margin" Value="0" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Canvas>
+        <!-- Shadow on whatever the tank stands on. -->
+        <Ellipse Canvas.Left="8" Canvas.Top="246" Width="296" Height="16" Fill="Black" Opacity="0.55">
+            <Ellipse.Effect>
+                <BlurEffect Radius="12" />
+            </Ellipse.Effect>
+        </Ellipse>
+
+        <!-- The tank. -->
+        <Canvas Canvas.Left="5" Canvas.Top="22" Width="302" Height="226">
+            <Canvas.Clip>
+                <RectangleGeometry Rect="0,0,302,226" RadiusX="4" RadiusY="4" />
+            </Canvas.Clip>
+
+            <!-- Air under the hood, lit by the lamp. -->
+            <Rectangle Width="302" Height="30">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#F4FCFF" Offset="0" />
+                        <GradientStop Color="#B9E6F6" Offset="1" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <!-- Water. -->
+            <Path Data="M 0,14 C 40,11 82,16 124,13 C 172,10 226,16 302,12 L 302,226 L 0,226 Z">
+                <Path.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#66D8FB" Offset="0" />
+                        <GradientStop Color="#27A8EA" Offset="0.2" />
+                        <GradientStop Color="#107CCF" Offset="0.62" />
+                        <GradientStop Color="#0A4F9A" Offset="1" />
+                    </LinearGradientBrush>
+                </Path.Fill>
+            </Path>
+
+            <!-- Lamp glow and shafts of light. -->
+            <Ellipse Canvas.Left="-10" Canvas.Top="-62" Width="290" Height="170">
+                <Ellipse.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#50FFFFFF" Offset="0" />
+                        <GradientStop Color="#00FFFFFF" Offset="1" />
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Polygon Points="52,13 78,13 34,206 -4,206" Fill="{StaticResource Ray}" />
+            <Polygon Points="112,13 126,13 98,190 78,190" Fill="{StaticResource Ray}" Opacity="0.7" />
+            <Polygon Points="166,13 204,13 196,214 146,214" Fill="{StaticResource Ray}" />
+            <Polygon Points="244,13 258,13 270,180 250,180" Fill="{StaticResource Ray}" Opacity="0.6" />
+
+            <!-- A shoal of small fish far back in the tank, pale and hazy, so they never pass for the ones that count. -->
+            <s:FishSchool x:Name="School" Width="302" Height="226" Opacity="0.55" />
+
+            <!-- Plants at the back, hazy with distance. A blur would be softer, but redoing it every frame costs too much. -->
+            <Canvas x:Name="BackPlants" Opacity="0.42">
+                <Path Fill="{StaticResource LeafDeep}" Data="M 64,212 C 56,186 72,170 62,142 C 78,166 78,192 72,212 Z" />
+                <Path Fill="{StaticResource LeafDeep}" Data="M 80,212 C 84,192 74,176 86,158 C 92,178 92,196 88,212 Z" />
+                <Path Fill="{StaticResource LeafDeep}" Data="M 226,212 C 220,184 236,166 228,136 C 244,160 242,190 236,212 Z" />
+                <Path Fill="{StaticResource LeafDeep}" Data="M 244,212 C 250,194 240,180 250,162 C 258,180 256,198 252,212 Z" />
+            </Canvas>
+
+            <!-- Bubbles from the air stone. -->
+            <s:RisingBubbles x:Name="Bubbles" Width="302" Height="226" IsHitTestVisible="False" />
+
+            <!-- Sand, pebbles. -->
+            <Path Data="M 0,205 C 42,197 92,200 132,207 C 182,215 242,199 302,204 L 302,226 L 0,226 Z">
+                <Path.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#FBEFC2" Offset="0" />
+                        <GradientStop Color="#E3C98A" Offset="0.45" />
+                        <GradientStop Color="#B58C52" Offset="1" />
+                    </LinearGradientBrush>
+                </Path.Fill>
+            </Path>
+            <Path Data="M 0,205 C 42,197 92,200 132,207 C 182,215 242,199 302,204" Stroke="#B0FFFBE6" StrokeThickness="1" />
+            <Ellipse Canvas.Left="108" Canvas.Top="205" Width="15" Height="9" Stroke="#70443A2C" StrokeThickness="0.6">
+                <Ellipse.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#EDEFF0" Offset="0" />
+                        <GradientStop Color="#7E8A92" Offset="1" />
+                    </LinearGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse Canvas.Left="120" Canvas.Top="209" Width="9" Height="6" Fill="#9A7A58" Stroke="#70443A2C" StrokeThickness="0.6" />
+            <Ellipse Canvas.Left="176" Canvas.Top="211" Width="11" Height="6" Fill="#C8B79A" Stroke="#60443A2C" StrokeThickness="0.6" />
+            <Ellipse Canvas.Left="206" Canvas.Top="206" Width="6" Height="4" Fill="#5F6B73" />
+            <Polygon Points="236,207 237.8,211.6 242.7,211.8 238.9,214.9 240.1,219.7 236,217 231.9,219.7 233.1,214.9 229.3,211.8 234.2,211.6"
+                     Stroke="#B0A8401A" StrokeThickness="0.8" StrokeLineJoin="Round">
+                <Polygon.Fill>
+                    <RadialGradientBrush GradientOrigin="0.4,0.35">
+                        <GradientStop Color="#FFC27A" Offset="0" />
+                        <GradientStop Color="#F0702C" Offset="1" />
+                    </RadialGradientBrush>
+                </Polygon.Fill>
+                <Polygon.RenderTransform>
+                    <RotateTransform Angle="14" CenterX="236" CenterY="214" />
+                </Polygon.RenderTransform>
+            </Polygon>
+
+            <!-- The old jar the little fish lives in. -->
+            <s:JarHideout x:Name="Hideout" Width="302" Height="226" />
+
+            <!-- Plants in front. -->
+            <Canvas x:Name="FrontPlants">
+                <Path Fill="{StaticResource Leaf}" Stroke="#70104E20" StrokeThickness="0.6" Data="M 14,212 C 6,190 22,174 13,150 C 31,172 32,192 24,212 Z" />
+                <Path Fill="{StaticResource Leaf}" Stroke="#70104E20" StrokeThickness="0.6" Data="M 26,214 C 34,196 22,180 38,160 C 44,182 44,200 36,214 Z" />
+                <Path Fill="{StaticResource Leaf}" Stroke="#70104E20" StrokeThickness="0.6" Data="M 2,214 C -4,200 8,190 2,172 C 14,190 14,204 10,214 Z" />
+                <Path Fill="{StaticResource Leaf}" Stroke="#70104E20" StrokeThickness="0.6" Data="M 276,212 C 268,192 284,180 277,158 C 294,178 294,196 286,212 Z" />
+                <Path Fill="{StaticResource Leaf}" Stroke="#70104E20" StrokeThickness="0.6" Data="M 290,214 C 297,202 289,192 297,180 C 305,192 303,204 300,214 Z" />
+                <Path Fill="{StaticResource Leaf}" Stroke="#70104E20" StrokeThickness="0.6" Data="M 262,214 C 258,202 268,194 264,180 C 276,194 274,206 270,214 Z" />
+            </Canvas>
+
+            <!-- The three limits. -->
+            <StackPanel Canvas.Left="14" Canvas.Top="18" Width="274">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Style.Triggers>
+                        <!-- Old values stay readable but step back. -->
+                        <DataTrigger Binding="{Binding IsStale}" Value="True">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+                <StackPanel DataContext="{Binding Session}">
+                    <Border Style="{StaticResource Caption}">
+                    <DockPanel Height="24" LastChildFill="False">
+                        <Border Style="{StaticResource PercentBadge}">
+                            <TextBlock Style="{StaticResource LimitPercent}" Text="{Binding PercentText}" />
+                        </Border>
+                        <TextBlock Style="{StaticResource LimitName}" Text="Session · 5 h" />
+                        <TextBlock Style="{StaticResource LimitReset}" Text="{Binding ResetText}" />
+                    </DockPanel>
+                    </Border>
+                    <s:FishLane x:Name="SessionFish" Height="34" Margin="0,0,0,1" Kind="BlueTang" Value="{Binding Percent}" />
+                </StackPanel>
+                <StackPanel DataContext="{Binding Weekly}">
+                    <Border Style="{StaticResource Caption}">
+                    <DockPanel Height="24" LastChildFill="False">
+                        <Border Style="{StaticResource PercentBadge}">
+                            <TextBlock Style="{StaticResource LimitPercent}" Text="{Binding PercentText}" />
+                        </Border>
+                        <TextBlock Style="{StaticResource LimitName}" Text="Týden" />
+                        <TextBlock Style="{StaticResource LimitReset}" Text="{Binding ResetText}" />
+                    </DockPanel>
+                    </Border>
+                    <s:FishLane x:Name="WeeklyFish" Height="34" Margin="0,0,0,1" Kind="Clownfish" Value="{Binding Percent}" />
+                </StackPanel>
+                <StackPanel DataContext="{Binding Fable}">
+                    <Border Style="{StaticResource Caption}">
+                    <DockPanel Height="24" LastChildFill="False">
+                        <Border Style="{StaticResource PercentBadge}">
+                            <TextBlock Style="{StaticResource LimitPercent}" Text="{Binding PercentText}" />
+                        </Border>
+                        <TextBlock Style="{StaticResource LimitName}" Text="Fable" />
+                        <TextBlock Style="{StaticResource LimitReset}" Text="{Binding ResetText}" />
+                    </DockPanel>
+                    </Border>
+                    <s:FishLane x:Name="FableFish" Height="34" Kind="PurpleTang" Value="{Binding Percent}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Water surface seen from the front. -->
+            <Path Data="M 0,14 C 40,11 82,16 124,13 C 172,10 226,16 302,12" Stroke="#F0FFFFFF" StrokeThickness="1.4" />
+            <Path Data="M 0,17 C 40,14 82,19 124,16 C 172,13 226,19 302,15" Stroke="#50FFFFFF" StrokeThickness="2.5" />
+
+            <!-- Reflections on the front pane. -->
+            <Polygon Points="186,0 236,0 150,226 100,226" Fill="#0CFFFFFF" />
+            <Polygon Points="246,0 258,0 172,226 160,226" Fill="#0CFFFFFF" />
+            <Rectangle Canvas.Left="3" Width="7" Height="226">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#66FFFFFF" Offset="0" />
+                        <GradientStop Color="#00FFFFFF" Offset="1" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle Canvas.Left="295" Width="5" Height="226">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#00FFFFFF" Offset="0" />
+                        <GradientStop Color="#38FFFFFF" Offset="1" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle Width="302" Height="226" RadiusX="4" RadiusY="4" Stroke="#C8E9FBFF" StrokeThickness="2" />
+            <Rectangle Width="302" Height="226" RadiusX="4" RadiusY="4" Stroke="#8006335C" StrokeThickness="0.8" />
+        </Canvas>
+
+        <!-- Hood with the lamp. -->
+        <Border Width="312" Height="27" CornerRadius="9,9,3,3" Background="{StaticResource Plastic}" BorderBrush="#F0000000" BorderThickness="1">
+            <Grid>
+                <Border CornerRadius="8,8,0,0" BorderBrush="#66FFFFFF" BorderThickness="0,1,0,0" Margin="1,0,1,0" />
+                <Ellipse Width="10" Height="10" HorizontalAlignment="Left" Margin="10,0,0,0" Stroke="#C0001A2E" StrokeThickness="0.8">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush GradientOrigin="0.35,0.3">
+                            <GradientStop Color="#FFFFFF" Offset="0" />
+                            <GradientStop Color="#58D4FF" Offset="0.45" />
+                            <GradientStop Color="#0A6FC4" Offset="1" />
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.Effect>
+                        <DropShadowEffect Color="#4FCBFF" BlurRadius="8" ShadowDepth="0" Opacity="0.9" />
+                    </Ellipse.Effect>
+                </Ellipse>
+                <TextBlock Text="Využití Claude" FontSize="12" FontWeight="SemiBold" Foreground="#EAF4FA" Margin="46,0,0,1" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding UpdatedText}" FontSize="11" Foreground="#9DB3C1" Margin="0,0,11,1" HorizontalAlignment="Right" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <!-- Base. -->
+        <Border Canvas.Top="245" Width="312" Height="11" CornerRadius="2,2,6,6" Background="{StaticResource Plastic}" BorderBrush="#F0000000" BorderThickness="1" />
+    </Canvas>
+</UserControl>

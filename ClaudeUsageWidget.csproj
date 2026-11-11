@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <!-- Only for the icon in the notification area. Its namespaces are named where used, so they do not clash with WPF's. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>ClaudeUsageWidget</AssemblyName>
+    <RootNamespace>ClaudeUsageWidget</RootNamespace>
+    <StartupObject>ClaudeUsageWidget.Program</StartupObject>
+    <SatelliteResourceLanguages>cs</SatelliteResourceLanguages>
+    <!-- Raise with every release: the widget compares it with the latest release on GitHub. -->
+    <Version>0.0.1</Version>
+  </PropertyGroup>
+
+  <!-- The test build lives in Demo and compiles these same files on its own. -->
+  <ItemGroup>
+    <Compile Remove="Demo\**" />
+    <Page Remove="Demo\**" />
+    <None Remove="Demo\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+</Project>
