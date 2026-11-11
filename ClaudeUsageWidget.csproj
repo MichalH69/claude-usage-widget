@@ -13,7 +13,7 @@
     <StartupObject>ClaudeUsageWidget.Program</StartupObject>
     <SatelliteResourceLanguages>cs</SatelliteResourceLanguages>
     <!-- Raise with every release: the widget compares it with the latest release on GitHub. -->
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
   </PropertyGroup>
 
   <!-- The test build lives in Demo and compiles these same files on its own. -->

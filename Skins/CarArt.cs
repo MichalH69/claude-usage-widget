@@ -18,6 +18,9 @@ internal sealed record CarModel(string Body, string Glass, double FrontWheel, do
     /// <summary>Whether the body has wheel arches. A formula car's wheels stand free.</summary>
     public bool Wells { get; init; } = true;
 
+    /// <summary>Coloured wheels, as racing cars often have. Null for plain silver.</summary>
+    public Color? RimColor { get; init; }
+
     /// <summary>A camper's body is white or cream; its paint goes on the stripes and trim the extra draws.</summary>
     public bool Cream { get; init; }
 
@@ -87,6 +90,7 @@ internal static class CarArt
     public static readonly CarModel RaceGt = new(Coupe.Body, Coupe.Glass, 20, 80, 100, -14)
     {
         WheelSize = 8.8,
+        RimColor = Rgb(0x2A2C30),
         Extra = (dc, paint) =>
         {
             Stripe(dc, Coupe.BodyShape, -17.5, 2.6, Colors.White);
@@ -96,17 +100,111 @@ internal static class CarArt
         },
     };
 
-    /// <summary>A supercar: low and wedge-shaped, with an air intake behind the door.</summary>
-    public static readonly CarModel Supercar = new(
-        "M 1,-8 C 0,-11 2,-14 8,-15.5 L 30,-19 C 38,-25 46,-28.5 56,-29 C 66,-29 74,-26 80,-22 L 97,-19 C 99.5,-18 100,-14 99.5,-8 Z",
-        "M 36,-20 C 42,-25 48,-27.3 56,-27.6 C 60,-27.6 63,-27 64,-26 L 62,-20 Z",
+    /// <summary>A wedge: a supercar drawn with a ruler, a hexagonal intake in its flank and a slash of light at the nose.</summary>
+    public static readonly CarModel Wedge = new(
+        "M 0,-9 L 2,-13 L 22,-17 L 38,-27 L 58,-28.5 L 74,-24 L 98,-20 L 100,-14 L 99,-8 Z",
+        "M 40,-26 L 56,-27.3 L 60,-21 L 44,-20.5 Z",
         20, 80, 100, -12.5)
     {
-        WheelSize = 8.6,
+        WheelSize = 8.8,
+        RimColor = Rgb(0x2A2C30),
         Extra = (dc, paint) =>
         {
-            dc.DrawGeometry(Dark, null, Shape("M 62,-17.5 L 76,-20 L 75,-12.5 L 66,-12.5 Z"));
-            dc.DrawRectangle(Dark, null, new Rect(1, -9, 28, 1.6));
+            dc.DrawGeometry(Dark, null, Shape("M 60,-19 L 72,-21 L 76,-15 L 72,-11 L 64,-11 Z"));
+            dc.DrawGeometry(Dark, null, Shape("M 0,-9 L 1,-10.5 L 30,-10.5 L 30,-8.5 Z M 86,-10.5 L 100,-10.5 L 99,-7.5 L 88,-7.5 Z"));
+            dc.DrawLine(new Pen(Brushes.White, 1.3), new Point(2, -13.2), new Point(10, -14.8));
+        },
+    };
+
+    /// <summary>An Italian GT: long bonnet, cabin set back, a deep scoop carved into the door.</summary>
+    public static readonly CarModel Grandtourer = new(
+        "M 1,-9 C 0,-13 3,-16 10,-17 C 20,-18.5 28,-19.5 34,-21 C 40,-27 48,-30 57,-30 C 66,-30 71,-27 76,-22.5 C 84,-21 93,-20 97,-18 C 100,-16 100,-12 99,-9 Z",
+        "M 38,-21.5 C 43,-26 49,-28.4 56,-28.5 C 61,-28.4 64,-27 66,-25 L 64,-21.5 Z",
+        20, 80, 100, -14)
+    {
+        WheelSize = 8.6,
+        RimColor = Rgb(0xC9CDD2),
+        Extra = (dc, paint) =>
+        {
+            dc.DrawGeometry(new SolidColorBrush(Mix(paint, Colors.Black, 0.55)), null,
+                Shape("M 62,-13 C 66,-19 73,-21 79,-19.5 L 77,-12.5 Z"));
+            dc.DrawEllipse(BrakeLampRed, null, new Point(97.6, -15.5), 1.7, 1.7);
+            dc.DrawEllipse(BrakeLampRed, null, new Point(95.6, -16.2), 1.5, 1.5);
+        },
+    };
+
+    /// <summary>A long-tailed hypercar: smooth as a drop of water, carbon below the waist, a wing on a swan neck.</summary>
+    public static readonly CarModel LongTail = new(
+        "M 0.5,-8 C 0,-11 3,-13.5 9,-14.5 L 30,-17.5 C 38,-25 47,-28 57,-28 C 67,-28 75,-25 82,-20 L 99,-17 C 100.5,-15 100.5,-11 100,-8 Z",
+        "M 37,-18.5 C 43,-24.5 50,-26.5 57,-26.6 C 62,-26.5 66,-25.5 68,-24 L 66,-19 Z",
+        21, 79, 100, -12.5)
+    {
+        WheelSize = 8.6,
+        RimColor = Rgb(0xE8B828),
+        Extra = (dc, paint) =>
+        {
+            Stripe(dc, Shape("M 0.5,-8 C 0,-11 3,-13.5 9,-14.5 L 30,-17.5 C 38,-25 47,-28 57,-28 C 67,-28 75,-25 82,-20 L 99,-17 C 100.5,-15 100.5,-11 100,-8 Z"),
+                -11.5, 4, Rgb(0x202326));
+            dc.DrawGeometry(Dark, null, Shape("M 64,-15 C 70,-19 78,-19 84,-16.5 L 82,-12 L 67,-12 Z"));
+            dc.DrawGeometry(null, new Pen(Dark, 2.2), Shape("M 91,-34 C 91,-28 89,-23 86,-19.5"));
+            dc.DrawRoundedRectangle(Dark, null, new Rect(80, -37, 21, 3), 1.2, 1.2);
+        },
+    };
+
+    /// <summary>A two-tone hypercar: a chrome curve sweeps round the door and the car behind it is a darker shade.</summary>
+    public static readonly CarModel TwoTone = new(
+        "M 1,-8.5 C 0,-12 2,-16 8,-17.5 L 28,-20.5 C 36,-28 46,-31 56,-31 C 68,-31 76,-27 82,-22 L 97,-19.5 C 100,-18 100.5,-13 100,-8.5 Z",
+        "M 35,-21.5 C 41,-27 48,-29.5 56,-29.6 C 62,-29.5 67,-28 70,-26 L 68,-21.5 Z",
+        20, 80, 100, -13)
+    {
+        WheelSize = 8.8,
+        RimColor = Rgb(0xD8DCE0),
+        Extra = (dc, paint) =>
+        {
+            Geometry body = Shape("M 1,-8.5 C 0,-12 2,-16 8,-17.5 L 28,-20.5 C 36,-28 46,-31 56,-31 C 68,-31 76,-27 82,-22 L 97,-19.5 C 100,-18 100.5,-13 100,-8.5 Z");
+            dc.PushClip(body);
+            dc.DrawGeometry(Lacquer(Mix(paint, Colors.Black, 0.6)), null,
+                Shape("M 72,-26 C 62,-26 58,-20 60,-13 C 62,-9 68,-8 74,-9 L 104,-9 L 104,-40 L 72,-40 Z"));
+            dc.Pop();
+            dc.DrawGeometry(null, new Pen(new LinearGradientBrush(Colors.White, Rgb(0x9AA2A8), 90), 1.9),
+                Shape("M 72,-26 C 62,-26 58,-20 60,-13 C 62,-9 68,-8 74,-9"));
+            dc.DrawGeometry(null, Outline(1.8), body);
+        },
+    };
+
+    /// <summary>A Le Mans prototype: long and flat, a bubble of a cockpit, a fin down its back and a big wing.</summary>
+    public static readonly CarModel Prototype = new(
+        "M 0,-6 L 1,-10 C 8,-12 18,-13 26,-14 C 34,-24 44,-27 52,-27 C 58,-27 62,-24 66,-19 L 98,-16 L 100,-9 L 99,-6 Z",
+        "M 34,-17 C 39,-23.5 45,-25.6 51,-25.7 C 54,-25.6 56,-24.5 57,-23 L 54,-17.5 Z",
+        19, 81, 100, -10.5)
+    {
+        WheelSize = 8.4,
+        RimColor = Rgb(0x2A2C30),
+        Extra = (dc, paint) =>
+        {
+            dc.DrawGeometry(new SolidColorBrush(Mix(paint, Colors.Black, 0.3)), Outline(0.6), Shape("M 55,-26.5 L 93,-16.5 L 60,-19.5 Z"));
+            dc.DrawRectangle(Brushes.White, Outline(0.5), new Rect(66, -16, 11, 8));
+            Number(dc, "8", new Point(71.5, -12), 7);
+            dc.DrawRectangle(Dark, null, new Rect(-1, -6.5, 20, 1.8));
+            RearWing(dc, 84, -30, 17, 12);
+        },
+    };
+
+    /// <summary>A racer from the sixties: low and round, a white roundel with its number, stripes over its back.</summary>
+    public static readonly CarModel Retro = new(
+        "M 1,-9 C 0,-14 4,-17 12,-18 C 22,-19 30,-20 36,-22 C 42,-27 50,-29 58,-29 C 66,-29 72,-26 76,-22 C 84,-21 92,-20 97,-18 C 100,-16 100,-12 99,-9 Z",
+        "M 40,-22.5 C 45,-26.5 51,-27.8 58,-27.8 C 63,-27.6 67,-26 69,-24 L 67,-22.5 Z",
+        20, 80, 100, -14)
+    {
+        WheelSize = 8.4,
+        RimColor = Rgb(0xD8B04A),
+        Extra = (dc, paint) =>
+        {
+            Geometry body = Shape("M 1,-9 C 0,-14 4,-17 12,-18 C 22,-19 30,-20 36,-22 C 42,-27 50,-29 58,-29 C 66,-29 72,-26 76,-22 C 84,-21 92,-20 97,-18 C 100,-16 100,-12 99,-9 Z");
+            Stripe(dc, body, -19.5, 1.6, Colors.White);
+            Stripe(dc, body, -16.8, 1.6, Colors.White);
+            dc.DrawEllipse(Brushes.White, Outline(0.6), new Point(52, -13), 5.6, 5.6);
+            Number(dc, "6", new Point(52, -13), 7.4);
         },
     };
 
@@ -117,6 +215,7 @@ internal static class CarArt
         21, 79, 100, -11.5)
     {
         WheelSize = 8.2,
+        RimColor = Rgb(0xE8B828),
         Extra = (dc, paint) =>
         {
             dc.DrawGeometry(new SolidColorBrush(Mix(paint, Colors.Black, 0.35)), null, Shape("M 64,-24.5 L 90,-18 L 66,-19.5 Z"));
@@ -210,12 +309,14 @@ internal static class CarArt
         },
     };
 
-    private static readonly CarModel[] RaceModels = { RaceGt, Supercar, Hypercar, Formula };
+    private static readonly CarModel[] RaceModels = { Wedge, Grandtourer, LongTail, TwoTone, Prototype, Retro, RaceGt, Hypercar, Formula };
     private static readonly CarModel[] CamperModels = { CamperVan, Motorhome, PickupCamper, RoofBoxWagon };
 
+    /// <summary>Loud racing colours: red, yellow, orange, lime, blue, violet, pink, teal, white and a carbon black.</summary>
     private static readonly Color[] RacePaints =
     {
-        Rgb(0xD8232A), Rgb(0xF2C21B), Rgb(0xF06A12), Rgb(0x8BD12A), Rgb(0x1F5FC8), Rgb(0x26292E), Rgb(0xF2F2EE), Rgb(0x1E9AA6),
+        Rgb(0xE3141B), Rgb(0xFFD000), Rgb(0xFF6A00), Rgb(0x7ED321), Rgb(0x0057FF), Rgb(0x8E2BD9), Rgb(0xFF2E88),
+        Rgb(0x00B8C4), Rgb(0xF4F4F0), Rgb(0x1E2024),
     };
 
     private static readonly Color[] CamperPaints =
@@ -232,6 +333,7 @@ internal static class CarArt
     };
 
     private static readonly Brush Dark = Frozen(new SolidColorBrush(Rgb(0x15171A)));
+    private static readonly Brush BrakeLampRed = Frozen(new SolidColorBrush(Rgb(0xD01A1A)));
     private static readonly Brush Cream = Frozen(new LinearGradientBrush(Rgb(0xFBFAF4), Rgb(0xD8D4C6), 90));
 
     private static Pen Outline(double thickness) => new(new SolidColorBrush(Color.FromArgb(0xE0, 0x0A, 0x0C, 0x0E)), thickness);
@@ -335,8 +437,9 @@ internal static class CarArt
     {
         dc.DrawDrawing(Body(model, paint));
         double r = model.WheelSize;
-        Wheel(dc, new Point(model.FrontWheel, -r), r, turn);
-        Wheel(dc, new Point(model.RearWheel, -r), r, turn);
+        Brush rim = model.RimColor is { } colour ? RimOf(colour) : Rim;
+        Wheel(dc, new Point(model.FrontWheel, -r), r, turn, rim);
+        Wheel(dc, new Point(model.RearWheel, -r), r, turn, rim);
         if (braking)
         {
             dc.DrawEllipse(BrakeGlow, null, new Point(model.Back + 1, model.LightY), 9, 7);
@@ -344,10 +447,22 @@ internal static class CarArt
         }
     }
 
-    private static void Wheel(DrawingContext dc, Point c, double r, double turn)
+    private static readonly Dictionary<Color, Brush> Rims = new();
+
+    private static Brush RimOf(Color colour)
+    {
+        if (!Rims.TryGetValue(colour, out Brush? brush))
+        {
+            brush = Frozen(new RadialGradientBrush(Mix(colour, Colors.White, 0.55), colour) { GradientOrigin = new Point(0.35, 0.3) });
+            Rims[colour] = brush;
+        }
+        return brush;
+    }
+
+    private static void Wheel(DrawingContext dc, Point c, double r, double turn, Brush rim)
     {
         dc.DrawEllipse(Tyre, null, c, r, r);
-        dc.DrawEllipse(Rim, null, c, r * 0.58, r * 0.58);
+        dc.DrawEllipse(rim, null, c, r * 0.58, r * 0.58);
         for (int i = 0; i < 5; i++)
         {
             double a = turn + i * Math.PI * 2 / 5;

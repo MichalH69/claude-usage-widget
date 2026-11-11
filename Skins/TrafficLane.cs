@@ -127,12 +127,15 @@ public sealed class TrafficLane : TankLayer, ITankLife
         {
             int slot = queue.Count;
             var (models, paints) = CarArt.Of(Fleet);
-            CarModel model = models[Pick(slot, 3) % models.Length];
+            // The kinds come round in a shuffled order, so a queue shows as many different cars as the fleet has.
+            CarModel model = models[(Pick(0, 3) + slot * Stride(models.Length)) % models.Length];
+            Color paint = paints[Pick(slot, 7) % paints.Length];
+            if (queue.Count > 0 && queue[^1].Paint == paint) paint = paints[(Array.IndexOf(paints, paint) + 1) % paints.Length];
             var car = new Car
             {
                 Visual = AddPiece(),
                 Model = model,
-                Paint = paints[Pick(slot, 7) % paints.Length],
+                Paint = paint,
                 Target = StopX + slot * Slot,
             };
             if (StartSettled)
@@ -151,6 +154,16 @@ public sealed class TrafficLane : TankLayer, ITankLife
             Draw(car, 0);
         }
     }
+
+    /// <summary>A step through the fleet that visits every kind before any comes again: any step with no factor in common with the count.</summary>
+    private int Stride(int count)
+    {
+        int step = 1 + Pick(1, 11) % Math.Max(1, count - 1);
+        while (Gcd(step, count) != 1) step++;
+        return step;
+    }
+
+    private static int Gcd(int a, int b) => b == 0 ? a : Gcd(b, a % b);
 
     /// <summary>
     /// A fixed choice for the car in a slot, the same every time the widget starts. HashCode is not used: it changes
