@@ -13,6 +13,13 @@ public sealed record LimitView(double Percent, string ResetText, bool IsEstimate
     /// <summary>What the clock will say at the reset, such as "2:00" or "čt 15:00". The gauges show it under the pointer.</summary>
     public string ResetClock { get; init; } = "";
 
+    /// <summary>What the aquarium shows: the time left, such as "za 2 d 13 h", or its usual text when there is none.</summary>
+    public string LeftText => string.IsNullOrEmpty(Countdown) ? ResetText
+        : Countdown.StartsWith("za") || Countdown.StartsWith("po") ? Countdown : "za " + Countdown;
+
+    /// <summary>What the aquarium shows under the pointer: the time of day of the reset, or its usual text when there is none.</summary>
+    public string HoverText => string.IsNullOrEmpty(ResetClock) ? ResetText : ResetClock;
+
     /// <summary>How much of the limit's window is still to run before the reset, from 1 just after one to 0 at the next. NaN when unknown.</summary>
     public double TimeLeft { get; init; } = double.NaN;
 

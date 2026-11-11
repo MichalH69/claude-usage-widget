@@ -65,13 +65,21 @@ public partial class AquariumSkin : UserControl, IWidgetSkin
         }
     }
 
+    public static readonly DependencyProperty ShowClockProperty =
+        DependencyProperty.Register(nameof(ShowClock), typeof(bool), typeof(AquariumSkin), new PropertyMetadata(false));
+
+    /// <summary>The reset lines give the time of day of each reset instead of the time left.</summary>
+    public bool ShowClock { get => (bool)GetValue(ShowClockProperty); set => SetValue(ShowClockProperty, value); }
+
     // Each fish watches the pointer by itself. When the window says the pointer has gone, the fish stop looking.
+    // Under the pointer the reset lines turn to the time of day of each reset.
     public bool Hovered
     {
         get => hovered;
         set
         {
             hovered = value;
+            ShowClock = value;
             if (!value) foreach (FishLane lane in Lanes) lane.PointerGone();
         }
     }

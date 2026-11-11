@@ -69,8 +69,15 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="Margin" Value="7,3,0,0" />
+            <Setter Property="Text" Value="{Binding LeftText}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Effect" Value="{StaticResource WaterText}" />
+            <Style.Triggers>
+                <!-- Under the pointer the time of day of the reset, as on the gauges. -->
+                <DataTrigger Binding="{Binding ShowClock, RelativeSource={RelativeSource AncestorType=s:AquariumSkin}}" Value="True">
+                    <Setter Property="Text" Value="{Binding HoverText}" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
         <Style x:Key="LimitPercent" TargetType="TextBlock">
             <Setter Property="FontSize" Value="17" />
@@ -249,7 +256,7 @@
                             <TextBlock Style="{StaticResource LimitPercent}" Text="{Binding PercentText}" />
                         </Border>
                         <TextBlock Style="{StaticResource LimitName}" Text="Session · 5 h" />
-                        <TextBlock Style="{StaticResource LimitReset}" Text="{Binding ResetText}" />
+                        <TextBlock Style="{StaticResource LimitReset}" />
                     </DockPanel>
                     </Border>
                     <s:FishLane x:Name="SessionFish" Height="34" Margin="0,0,0,1" Kind="BlueTang" Value="{Binding Percent}" />
@@ -261,7 +268,7 @@
                             <TextBlock Style="{StaticResource LimitPercent}" Text="{Binding PercentText}" />
                         </Border>
                         <TextBlock Style="{StaticResource LimitName}" Text="Týden" />
-                        <TextBlock Style="{StaticResource LimitReset}" Text="{Binding ResetText}" />
+                        <TextBlock Style="{StaticResource LimitReset}" />
                     </DockPanel>
                     </Border>
                     <s:FishLane x:Name="WeeklyFish" Height="34" Margin="0,0,0,1" Kind="Clownfish" Value="{Binding Percent}" />
@@ -273,7 +280,7 @@
                             <TextBlock Style="{StaticResource LimitPercent}" Text="{Binding PercentText}" />
                         </Border>
                         <TextBlock Style="{StaticResource LimitName}" Text="Fable" />
-                        <TextBlock Style="{StaticResource LimitReset}" Text="{Binding ResetText}" />
+                        <TextBlock Style="{StaticResource LimitReset}" />
                     </DockPanel>
                     </Border>
                     <s:FishLane x:Name="FableFish" Height="34" Kind="PurpleTang" Value="{Binding Percent}" />

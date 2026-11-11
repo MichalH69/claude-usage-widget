@@ -64,9 +64,9 @@ public sealed class GaugeDial : FrameworkElement
     private readonly record struct Lettering(
         double Label, double LabelAbove, double Reset, double ResetBelow, double Number, double NumberBaseline, double Numerals);
 
-    private static readonly Lettering MainLarge = new(0.118, 0.335, 0.112, 0.275, 0.30, 0.76, 0.145);
+    private static readonly Lettering MainLarge = new(0.118, 0.335, 0.150, 0.280, 0.30, 0.76, 0.145);
     private static readonly Lettering MainSmall = new(0.130, 0.335, 0.146, 0.262, 0.31, 0.76, 0.152);
-    private static readonly Lettering SideLarge = new(0.175, 0.40, 0.150, 0.315, 0.37, 0.80, 0);
+    private static readonly Lettering SideLarge = new(0.175, 0.40, 0.205, 0.315, 0.37, 0.80, 0);
     private static readonly Lettering SideSmall = new(0.215, 0.40, 0.228, 0.315, 0.40, 0.80, 0);
 
     private Lettering Sizes => Detailed ? (Compact ? MainSmall : MainLarge) : (Compact ? SideSmall : SideLarge);
